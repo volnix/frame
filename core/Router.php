@@ -46,9 +46,6 @@ class Router {
 			die("You must pass in a route or set a default controller.");
 		}
 		
-		// get our autoloader ready to load the file
-		
-		
 		// if your app namespace is set, then tack on our namespace to our controller name
 		if (defined('APP_NAMESPACE_PREFIX'))
 		{
