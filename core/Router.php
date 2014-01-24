@@ -49,7 +49,7 @@ class Router {
 		// if your app namespace is set, then tack on our namespace to our controller name
 		if (defined('APP_NAMESPACE_PREFIX'))
 		{
-			$controller = sprintf("%s\\controllers\\%s", APP_NAMESPACE_PREFIX, $controller);
+			$controller = sprintf("%s\\Controllers\\%s", APP_NAMESPACE_PREFIX, $controller);
 		}
 		
 		if (!class_exists($controller, TRUE))

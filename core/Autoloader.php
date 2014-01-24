@@ -70,7 +70,7 @@ class Autoloader
         // work backwards through the namespace names of the fully-qualified
         // class name to find a mapped file name
         while (false !== $pos = strrpos($prefix, '\\')) {
-
+        
             // retain the trailing namespace separator in the prefix
             $prefix = substr($class, 0, $pos + 1);
 
@@ -89,8 +89,25 @@ class Autoloader
         }
         
         // no namespace was used, so try to load the thing without
-        $file = APP_PATH . DIRECTORY_SEPARATOR . "controllers" . DIRECTORY_SEPARATOR . $class . ".php";
-        return $this->requireFile($file);
+        if (file_exists(APP_PATH . DIRECTORY_SEPARATOR . "controllers" . DIRECTORY_SEPARATOR . $class . ".php"))
+        {
+        	$file = APP_PATH . DIRECTORY_SEPARATOR . "controllers" . DIRECTORY_SEPARATOR . $class . ".php";
+	        return $this->requireFile($file);
+        }
+        elseif (file_exists(APP_PATH . DIRECTORY_SEPARATOR . "models" . DIRECTORY_SEPARATOR . $class . ".php"))
+        {
+	        $file = APP_PATH . DIRECTORY_SEPARATOR . "models" . DIRECTORY_SEPARATOR . $class . ".php";
+	        return $this->requireFile($file);
+        }
+        elseif (file_exists(APP_PATH . DIRECTORY_SEPARATOR . "views" . DIRECTORY_SEPARATOR . $class . ".php"))
+        {
+	        $file = APP_PATH . DIRECTORY_SEPARATOR . "views" . DIRECTORY_SEPARATOR . $class . ".php";
+	        return $this->requireFile($file);
+        }
+        else
+        {
+	        return $this->requireFile($class);
+        }
     }
 
     /**
