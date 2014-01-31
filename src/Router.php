@@ -1,6 +1,6 @@
 <?php
 
-namespace Frame\Core;
+namespace Simple\Core;
 
 class Router {
 	
@@ -10,13 +10,17 @@ class Router {
 		$controller = "";
 		$method = "index";
 		$args = [];
+
+		// this is nasty.  just let it be.
+		$path = ltrim(explode(INDEX, parse_url($_SERVER['REQUEST_URI'])['path'])[1], "/");
 		
-		$uri = $_SERVER['REQUEST_URI'];
-		$route_regex = sprintf("/%s([a-z0-9\/]*)/", preg_quote(INDEX_FILE));
-		
-		if (preg_match($route_regex, $uri, $matches))
+		if (preg_match("/\//", $path))
 		{
-			$routes = array_filter(explode("/", $matches[1]));
+			$routes = array_filter(explode("/", $path));
+		}
+		else
+		{
+			$routes = [$path];
 		}
 		
 		// reset the keys to 0 after the array_filter
@@ -46,20 +50,16 @@ class Router {
 			die("You must pass in a route or set a default controller.");
 		}
 		
-		// if your app namespace is set, then tack on our namespace to our controller name
-		if (defined('APP_NAMESPACE_PREFIX'))
-		{
-			$controller = sprintf("%s\\Controllers\\%s", APP_NAMESPACE_PREFIX, $controller);
-		}
+		$controller_name = sprintf("%s\\Controllers\\%s", APP_NAMESPACE, $controller);
 		
-		if (!class_exists($controller, TRUE))
+		if (!class_exists($controller_name, TRUE))
 		{
 			header("HTTP/1.0 404 Not Found");
-			die("404: Class {$controller} not found!");
+			die("404: Class {$controller_name} not found!");
 		}
 
 		// annnnnd, GO!
-		$application = new $controller;
+		$application = new $controller_name;
 		
 		if (!method_exists($application, $method))
 		{
@@ -68,5 +68,12 @@ class Router {
 		}
 		
 		call_user_func_array([$application, $method], $args);
+	}
+	
+	public static function base($path = "")
+	{
+		$pieces = explode(INDEX, $_SERVER['REQUEST_URI']);
+		$base = ($_SERVER['HTTPS'] ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . $pieces[0] . INDEX . "/" . $path;
+		return $base;
 	}
 }

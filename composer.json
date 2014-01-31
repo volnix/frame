@@ -1,5 +1,19 @@
 {
-	"require": {
-		"illuminate/database": "*"
-	}
+	"name": "simple/core",
+	"description": "Dead simple bootstrap to an application.",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Nick Volgas",
+			"email": "n.volgas@gmail.com"
+		}
+	],
+	"autoload": {
+        "psr-4": {
+            "Simple\\Core\\": "src/"
+        }
+    },
+    "require": {
+	    "php": ">= 5.4"
+    }
 }
