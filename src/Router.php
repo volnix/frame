@@ -1,6 +1,6 @@
 <?php
 
-namespace Simple\Core;
+namespace Simple;
 
 class Router {
 	
