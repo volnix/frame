@@ -4,15 +4,17 @@ namespace Simple;
 
 class Router {
 	
-	public function start()
+	public static function start($namespace)
 	{
+	
+		$index = sprintf("%s.php", pathinfo($_SERVER['REQUEST_URI'])['filename']);
 		$routes = [];
 		$controller = "";
 		$method = "index";
 		$args = [];
 
 		// this is nasty.  just let it be.
-		$path = ltrim(explode(INDEX, parse_url($_SERVER['REQUEST_URI'])['path'])[1], "/");
+		$path = ltrim(explode($index, parse_url($_SERVER['REQUEST_URI'])['path'])[1], "/");
 		
 		if (preg_match("/\//", $path))
 		{
@@ -50,7 +52,7 @@ class Router {
 			die("You must pass in a route or set a default controller.");
 		}
 		
-		$controller_name = sprintf("%s\\Controllers\\%s", APP_NAMESPACE, $controller);
+		$controller_name = sprintf("%s\\Controllers\\%s", $namespace, $controller);
 		
 		if (!class_exists($controller_name, TRUE))
 		{
@@ -72,8 +74,9 @@ class Router {
 	
 	public static function base($path = "")
 	{
-		$pieces = explode(INDEX, $_SERVER['REQUEST_URI']);
-		$base = ($_SERVER['HTTPS'] ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . $pieces[0] . INDEX . "/" . $path;
+		$index = sprintf("%s.php", pathinfo($_SERVER['REQUEST_URI'])['filename']);
+		$pieces = explode($index, $_SERVER['REQUEST_URI']);
+		$base = ($_SERVER['HTTPS'] ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . $pieces[0] . $index . "/" . $path;
 		return $base;
-	}
+	} 
 }
