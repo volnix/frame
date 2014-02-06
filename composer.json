@@ -1,5 +1,5 @@
 {
-	"name": "simple/core",
+	"name": "simple/router",
 	"description": "Dead simple bootstrap to an application.",
 	"license": "MIT",
 	"authors": [
@@ -10,7 +10,7 @@
 	],
 	"autoload": {
         "psr-4": {
-            "Simple\\Core\\": "src/"
+            "Simple\\Router\\": "src/"
         }
     },
     "require": {
