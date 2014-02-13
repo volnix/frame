@@ -11,12 +11,8 @@ class Router {
 		$method = "index";
 		$args = [];
 		
-		// figure out our index
-		preg_match('/[a-z\_0-9]+\.php/i', $_SERVER['REQUEST_URI'], $matches);
-		$index = $matches[0];
-		
 		// split our url by our index
-		$url_parts = explode($index, $_SERVER['REQUEST_URI']);
+		$url_parts = explode(self::get_index(), $_SERVER['REQUEST_URI']);
 		$route_parts = explode("/", ltrim($url_parts[1]));
 		
 		// filter any null routes and reset our keys
@@ -68,9 +64,14 @@ class Router {
 	
 	public static function base($path = "")
 	{
-		$index = sprintf("%s.php", pathinfo($_SERVER['REQUEST_URI'])['filename']);
-		$pieces = explode($index, $_SERVER['REQUEST_URI']);
-		$base = ($_SERVER['HTTPS'] ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . $pieces[0] . $index . "/" . $path;
+		$pieces = explode(self::get_index(), $_SERVER['REQUEST_URI']);
+		$base = ($_SERVER['HTTPS'] ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . $pieces[0] . self::get_index() . "/" . $path;
 		return $base;
-	} 
+	}
+	
+	private static function get_index()
+	{
+		preg_match('/[a-z\_0-9]+\.php/i', $_SERVER['REQUEST_URI'], $matches);
+		return $matches[0];
+	}
 }
