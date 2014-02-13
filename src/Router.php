@@ -6,27 +6,21 @@ class Router {
 	
 	public static function start($namespace)
 	{
-	
-		$index = sprintf("%s.php", pathinfo($_SERVER['REQUEST_URI'])['filename']);
 		$routes = [];
 		$controller = "";
 		$method = "index";
 		$args = [];
-
-		// this is nasty.  just let it be.
-		$path = ltrim(explode($index, parse_url($_SERVER['REQUEST_URI'])['path'])[1], "/");
 		
-		if (preg_match("/\//", $path))
-		{
-			$routes = array_filter(explode("/", $path));
-		}
-		else
-		{
-			$routes = [$path];
-		}
+		// figure out our index
+		preg_match('/[a-z\_0-9]+\.php/i', $_SERVER['REQUEST_URI'], $matches);
+		$index = $matches[0];
 		
-		// reset the keys to 0 after the array_filter
-		$routes = array_values($routes);
+		// split our url by our index
+		$url_parts = explode($index, $_SERVER['REQUEST_URI']);
+		$route_parts = explode("/", ltrim($url_parts[1]));
+		
+		// filter any null routes and reset our keys
+		$routes = array_values(array_filter($route_parts));
 		
 		if (count($routes) == 1)
 		{
