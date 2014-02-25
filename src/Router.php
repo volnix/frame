@@ -65,7 +65,7 @@ class Router {
 	public static function make_url($path = "")
 	{
 		$pieces = explode(self::get_index(), $_SERVER['REQUEST_URI']);
-		$base = ($_SERVER['HTTPS'] ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . $pieces[0] . self::get_index() . "/" . $path;
+		$base = $pieces[0] . self::get_index() . "/" . $path;
 		return $base;
 	}
 	
